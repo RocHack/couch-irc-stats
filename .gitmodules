@@ -1,0 +1,3 @@
+[submodule "_attachments/d3"]
+	path = _attachments/d3
+	url = git://github.com/mbostock/d3.git

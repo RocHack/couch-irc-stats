@@ -1,0 +1,28 @@
+function mapMessageDay(msg) {
+	if (typeof msg.text != "string") return;
+	var d = new Date(msg.date || (msg._id * 1000));
+	if (isNaN(d)) return;
+	// shift midnight to 6AM
+	d.setHours(d.getHours()-6);
+	var day = d.getDay(),
+	D = d.getDate(),
+	h = d.getHours();
+
+	// round down to start of week
+	d.setDate(D - day);
+	D = d.getDate();
+	var Y = d.getFullYear(),
+	M = d.getMonth() + 1,
+	days = [0,0,0,0,0,0,0],
+	hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	hours[h] = days;
+	days[day] = 1;
+
+	emit([Y, M, D, msg.sender], hours);
+}
+
+function(doc) {
+	mapMessageDay(doc);
+	if (doc.messages) doc.messages.forEach(mapMessageDay);
+}
+

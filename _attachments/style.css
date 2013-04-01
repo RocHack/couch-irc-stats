@@ -1,0 +1,71 @@
+body {
+	margin-top: 1em;
+}
+
+h1 {
+	text-align: center;
+}
+
+/* Timeline */
+
+#timeline {
+	height: 90px;
+	width: 900px;
+	margin: auto;
+}
+
+#timeline svg {
+	font: 11px sans-serif;
+	width: 100%;
+}
+
+path {
+	fill: steelblue;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.brush .extent {
+	stroke: #fff;
+	fill-opacity: .125;
+	shape-rendering: crispEdges;
+}
+
+/* Hourly distribution */
+
+#active-times {
+	height: 150px;
+	width: 760px;
+	margin: auto;
+}
+
+#active-times svg {
+	font: 11px sans-serif;
+	width: 100%;
+}
+
+.activity-heading {
+	font-weight: bold;
+	font-size: 1.3em;
+	fill: #336;
+}
+*/
+
+.hourly rect {
+	stroke: white;
+	fill: steelblue;
+}
+
+.week rect {
+	stroke: none;
+	shape-rendering: crispEdges;
+}
+
+.underline {
+	stroke: #000;
+}
