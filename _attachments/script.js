@@ -11,7 +11,7 @@ function debounce(fn, ms) {
 		}
 		timeout = setTimeout(exec, ms || 50);
 	};
-};
+}
 
 function dateToKey(date, inclusive) {
 	return "[" +
