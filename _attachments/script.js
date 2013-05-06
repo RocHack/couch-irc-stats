@@ -53,16 +53,16 @@ var base = dev ? '/couchdb/markov/_design/irc_stats/' : '';
 
 var margin = {top: 10, right: 20, bottom: 20, left: 20},
     width = 820 - margin.left - margin.right,
-    height = 90 - margin.top - margin.bottom,
+	height = 100 - margin.top - margin.bottom,
 	initialSelection = dev ? 0.5 : 0.12;
 
-var x = d3.time.scale().range([0, width]),
-    y = d3.scale.linear().range([height, 0]);
+	var x = d3.time.scale().range([0, width]),
+	y = d3.scale.linear().range([height, 0]);
 
-var xAxis = d3.svg.axis().scale(x).orient("bottom");
+	var xAxis = d3.svg.axis().scale(x).orient("bottom");
 
-var brush = d3.svg.brush()
-    .x(x)
+	var brush = d3.svg.brush()
+	.x(x)
 	.extent([1 - initialSelection, 1])
     .on("brush", brushed);
 
@@ -127,6 +127,7 @@ function updateHistograms(extent) {
 	// update the ranges
 	hourlyDistribution(extent);
 	weeklyDistribution(extent);
+	topURLs(extent);
 }
 
 // Distribution histograms
@@ -310,5 +311,36 @@ var weeklyDistribution = (function () {
 	return function updateRange(extent) {
 		var query = makeRangeQuery(extent);
 		d3.json(base + "_view/weekly_distribution?" + query, gotData);
+	};
+}());
+
+var topURLs = (function () {
+	var limit = 5;
+	var tr = d3.select("#top-urls tbody").selectAll("tr");
+
+	function rank(d, i) { return i + 1; }
+	function url(d) { return d.url; }
+	function times(d) { return d.count; }
+	function sender(d) { return d.sender || ""; }
+
+	function gotData(error, values) {
+		tr = tr.data(values.slice(0, limit), url);
+		var trEnter = tr.enter().append("tr");
+		trEnter.append("td").attr("class", "rank");
+		trEnter.append("td").attr("class", "url").append("a");
+		trEnter.append("td").attr("class", "times");
+		trEnter.append("td").attr("class", "sender");
+		tr.exit().remove();
+
+		tr.select(".rank").datum(rank).text(String);
+		tr.select(".url a").datum(url).text(String).attr("href", String);
+		tr.select(".times").datum(times).text(String);
+		tr.select(".sender").datum(sender).text(String);
+		tr.order();
+	}
+
+	return function updateRange(extent) {
+		var query = makeRangeQuery(extent) + "&group=true";
+		d3.json(base + "_list/top_urls/urls?" + query, gotData);
 	};
 }());
