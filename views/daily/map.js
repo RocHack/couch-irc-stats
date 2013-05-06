@@ -6,10 +6,9 @@ function(doc) {
 		// shift midnight to 6AM
 		d.setHours(d.getHours()-6);
 		var Y = d.getFullYear(),
-		M = d.getMonth() + 1,
+		M = d.getMonth(),
 		D = d.getDate();
 
-		//emit([channel, Y, M, D, msg.sender], null);
 		emit([Y, M, D, msg.sender], null);
 	}
 
@@ -28,7 +27,7 @@ function(doc) {
 			var d = new Date(start + step * i);
 			if (isNaN(d)) return;
 			var Y = d.getFullYear(),
-			M = d.getMonth() + 1,
+			M = d.getMonth(),
 			D = d.getDate();
 			//emit([channel, Y, M, D, sender], null);
 			emit([Y, M, D, sender], null);

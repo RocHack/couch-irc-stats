@@ -6,7 +6,7 @@ function(doc) {
 		// shift midnight to 6AM
 		d.setHours(d.getHours()-6);
 		var Y = d.getFullYear(),
-		M = d.getMonth() + 1,
+		M = d.getMonth(),
 		D = d.getDate(),
 		h = d.getHours();
 		var hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];

@@ -13,7 +13,7 @@ function(doc) {
 		d.setDate(D - day);
 		D = d.getDate();
 		var Y = d.getFullYear(),
-			M = d.getMonth() + 1;
+			M = d.getMonth();
 		var hours = [
 			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
 			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,

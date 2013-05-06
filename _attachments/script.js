@@ -16,8 +16,9 @@ function debounce(fn, ms) {
 function dateToKey(date, inclusive) {
 	return "[" +
 		date.getFullYear() + "," +
-		(date.getMonth() + 1) + "," +
-		date.getDate() + (inclusive ? ",{}]" : "]");
+		date.getMonth() + "," +
+		date.getDate() +
+		(inclusive ? ",{}]" : "]");
 }
 
 function makeRangeQuery(start, end) {
@@ -65,7 +66,7 @@ var area = d3.svg.area()
     .interpolate("monotone")
     .x(function(d) { return x(d.date); })
     .y0(height)
-    .y1(function(d) { return y(d.value); });
+    .y1(function(d) { return y(d.value).toFixed(0); });
 
 var context = d3.select("#timeline").append("svg")
 	.append("g")
@@ -88,7 +89,7 @@ var xAxisG = context.append("g")
 function gotTimeline(error, resp) {
 	var data = resp.rows;
 	data.forEach(function(d) {
-		d.date = new Date(d.key);
+		d.date = new Date(d.key[0], d.key[1], d.key[2]);
 	});
 
 	x.domain(d3.extent(data.map(function(d) { return d.date; })));
