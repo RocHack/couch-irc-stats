@@ -1,0 +1,7 @@
+[
+  "README$",
+  ".*~$",
+  "\\..*\\.swp$",
+  "^_attachments/d3/[^d]",
+  "Session\\.vim"
+]
