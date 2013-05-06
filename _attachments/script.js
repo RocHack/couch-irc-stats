@@ -293,7 +293,8 @@ var weeklyDistribution = (function () {
 	function gotData(error, resp) {
 		var newData = getFirstValue(resp) || [];
 		// convert 1d array to 2d array
-		var deepData = [[], [], [], [], [], [], [], [], [], [], [], [],
+		var deepData = [
+			[], [], [], [], [], [], [], [], [], [], [], [],
 			[], [], [], [], [], [], [], [], [], [], [], []];
 		for (var i = 0; i < 24; i++)
 			for (var j = 0; j < 7; j++)
@@ -309,8 +310,8 @@ var weeklyDistribution = (function () {
 		hours.data(data);
 		rect.data(Object)
 		transitionOrFade.call(rect, 1000)
-			.attr("y", function(d) { return height - y(d.y0) - .5; })
-			.attr("height", function(d) { return y(d.y); });
+			.attr("y", function(d) { return height - y(d.y0 || 0) - .5; })
+			.attr("height", function(d) { return y(d.y || 0); });
 	}
 
 	return {
