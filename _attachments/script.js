@@ -21,9 +21,9 @@ function dateToKey(date, inclusive) {
 		(inclusive ? ",{}]" : "]");
 }
 
-function makeRangeQuery(start, end) {
-	return "startkey=" + dateToKey(start) +
-		"&endkey=" + dateToKey(end, true);
+function makeRangeQuery(extent) {
+	return "startkey=" + dateToKey(extent[0]) +
+		"&endkey=" + dateToKey(extent[1], true);
 }
 
 function getFirstValue(resp) {
@@ -41,6 +41,10 @@ function transitionOrFade(duration) {
 	}
 	return this.transition().duration(duration);
 }
+
+var brushed = debounce(function() {
+	updateHistograms(brush.extent());
+}, 100);
 
 var dev = location.host == 'localhost';
 var base = dev ? '/couchdb/markov/_design/irc_stats/' : '';
@@ -60,7 +64,7 @@ var xAxis = d3.svg.axis().scale(x).orient("bottom");
 var brush = d3.svg.brush()
     .x(x)
 	.extent([1 - initialSelection, 1])
-    .on("brush", brush);
+    .on("brush", brushed);
 
 var area = d3.svg.area()
     .interpolate("monotone")
@@ -84,7 +88,7 @@ context.append("g")
 
 var xAxisG = context.append("g")
 	.attr("class", "x axis")
-	.attr("transform", "translate(0," + height + ")")
+	.attr("transform", "translate(0," + height + ")");
 
 function gotTimeline(error, resp) {
 	var data = resp.rows;
@@ -120,12 +124,9 @@ function updateHistograms(extent) {
 	if (extent.some(isNaN)) {
 		console.log('bad extent', extent);
 	}
-	hourlyDistribution.updateRange(extent[0], extent[1]);
-	weeklyDistribution.updateRange(extent[0], extent[1]);
-}
-
-function brush() {
-	updateHistograms(brush.extent());
+	// update the ranges
+	hourlyDistribution(extent);
+	weeklyDistribution(extent);
 }
 
 // Distribution histograms
@@ -184,11 +185,6 @@ var hourlyDistribution = (function () {
 		.attr("class", "activity-heading")
 		.text("Hourly activity");
 
-	function updateRange(start, end) {
-		var query = makeRangeQuery(start, end);
-		d3.json(base + "_view/hourly_distribution?" + query, gotData);
-	}
-
 	function gotData(error, resp) {
 		var newData = getFirstValue(resp) || zeros;
 		data = newData;
@@ -200,8 +196,9 @@ var hourlyDistribution = (function () {
 			.attr("height", function(d) { return y(d); });
 	}
 
-	return {
-		updateRange: debounce(updateRange, 100)
+	return function updateRange(extent) {
+		var query = makeRangeQuery(extent);
+		d3.json(base + "_view/hourly_distribution?" + query, gotData);
 	};
 }());
 
@@ -273,11 +270,6 @@ var weeklyDistribution = (function () {
 		.attr("class", "activity-heading")
 		.text("Daily activity");
 
-	function updateRange(start, end) {
-		var query = makeRangeQuery(start, end);
-		d3.json(base + "_view/weekly_distribution?" + query, gotData);
-	}
-
 	function stack(data) {
 		var y0 = [0,0,0,0,0,0,0];
 		return data.map(function (d) {
@@ -315,7 +307,8 @@ var weeklyDistribution = (function () {
 			.attr("height", function(d) { return y(d.y || 0); });
 	}
 
-	return {
-		updateRange: debounce(updateRange, 100)
+	return function updateRange(extent) {
+		var query = makeRangeQuery(extent);
+		d3.json(base + "_view/weekly_distribution?" + query, gotData);
 	};
 }());
