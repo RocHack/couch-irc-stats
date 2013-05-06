@@ -36,7 +36,7 @@ function transitionOrFade(duration) {
 		this.style("opacity", 0)
 			.transition()
 			.duration(duration/4)
-			.style("opacity", 1)
+			.style("opacity", 1);
 		return this;
 	}
 	return this.transition().duration(duration);
@@ -50,7 +50,7 @@ var base = dev ? '/couchdb/markov/_design/irc_stats/' : '';
 var margin = {top: 10, right: 20, bottom: 20, left: 20},
     width = 820 - margin.left - margin.right,
     height = 90 - margin.top - margin.bottom,
-	initialSelection = dev ? .5 : 0.12;
+	initialSelection = dev ? 0.5 : 0.12;
 
 var x = d3.time.scale().range([0, width]),
     y = d3.scale.linear().range([height, 0]);
@@ -131,7 +131,7 @@ function brush() {
 // Distribution histograms
 
 var svg = d3.select("#active-times").append("svg")
-	.attr("class", "chart")
+	.attr("class", "chart");
 
 function color(n) {
 	if (n in color) return color[n];
@@ -166,8 +166,8 @@ var hourlyDistribution = (function () {
 	var rect = hourlyChart.selectAll("rect")
 		.data(zeros)
 		.enter().append("rect")
-		.attr("x", function(d, i) { return x(i) - .5; })
-		.attr("y", function(d) { return height - y(d) - .5; })
+		.attr("x", function(d, i) { return x(i) - 0.5; })
+		.attr("y", function(d) { return height - y(d) - 0.5; })
 		.attr("width", w)
 		.attr("height", function(d) { return y(d); })
 		.style("fill", function(d, i) { return color(i); });
@@ -182,7 +182,7 @@ var hourlyDistribution = (function () {
 		.attr("y", height + 40)
 		.attr("text-anchor", "middle")
 		.attr("class", "activity-heading")
-		.text("Hourly activity")
+		.text("Hourly activity");
 
 	function updateRange(start, end) {
 		var query = makeRangeQuery(start, end);
@@ -194,9 +194,9 @@ var hourlyDistribution = (function () {
 		data = newData;
 
 		y.domain([0, d3.max(data)]);
-		rect.data(data)
+		rect.data(data);
 		transitionOrFade.call(rect, 1000)
-			.attr("y", function(d) { return height - y(d) - .5; })
+			.attr("y", function(d) { return height - y(d) - 0.5; })
 			.attr("height", function(d) { return y(d); });
 	}
 
@@ -214,7 +214,7 @@ var weeklyDistribution = (function () {
 		[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0]
 	];
 
 	var margin = {top: 20, right: 20, bottom: 20, left: 520},
@@ -234,16 +234,16 @@ var weeklyDistribution = (function () {
 	weeklyChart.append("svg:line")
 		.style("stroke", "#000")
 		.attr("x1", 0)
-		.attr("y1", height + .5)
-		.attr("y2", height + .5)
-		.attr("x2", width - 1)
+		.attr("y1", height + 0.5)
+		.attr("y2", height + 0.5)
+		.attr("x2", width - 1);
 
 	// Add labels for the weekdays
 	weeklyChart.selectAll(".weekday")
 		.data("Sun Mon Tue Wed Thu Fri Sat".split(" "))
 		.enter().append("text")
 		.attr("class", "weekday")
-		.attr("x", function (d, i) { return x(i + .5); })
+		.attr("x", function (d, i) { return x(i + 0.5); })
 		.attr("text-anchor", "middle")
 		.attr("y", height + 14)
 		.text(String);
@@ -271,7 +271,7 @@ var weeklyDistribution = (function () {
 		.attr("y", height + 40)
 		.attr("text-anchor", "middle")
 		.attr("class", "activity-heading")
-		.text("Daily activity")
+		.text("Daily activity");
 
 	function updateRange(start, end) {
 		var query = makeRangeQuery(start, end);
@@ -309,9 +309,9 @@ var weeklyDistribution = (function () {
 			return d3.max(layer, function (d) { return d.y + d.y0; });
 		})]);
 		hours.data(data);
-		rect.data(Object)
+		rect.data(Object);
 		transitionOrFade.call(rect, 1000)
-			.attr("y", function(d) { return height - y(d.y0 || 0) - .5; })
+			.attr("y", function(d) { return height - y(d.y0 || 0) - 0.5; })
 			.attr("height", function(d) { return y(d.y || 0); });
 	}
 
