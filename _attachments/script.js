@@ -48,7 +48,7 @@ var base = dev ? '/couchdb/markov/_design/irc_stats/' : '';
 // Timeline
 
 var margin = {top: 10, right: 20, bottom: 20, left: 20},
-    width = 900 - margin.left - margin.right,
+    width = 820 - margin.left - margin.right,
     height = 90 - margin.top - margin.bottom,
 	initialSelection = dev ? .5 : 0.12;
 
