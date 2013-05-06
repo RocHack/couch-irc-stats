@@ -6,18 +6,24 @@ function(doc) {
 		// shift midnight to 6AM
 		d.setHours(d.getHours()-6);
 		var day = d.getDay(),
-		D = d.getDate(),
-		h = d.getHours();
+			D = d.getDate(),
+			h = d.getHours();
 
 		// round down to start of week
 		d.setDate(D - day);
 		D = d.getDate();
 		var Y = d.getFullYear(),
-		M = d.getMonth() + 1,
-		days = [0,0,0,0,0,0,0],
-		hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-		hours[h] = days;
-		days[day] = 1;
+			M = d.getMonth() + 1;
+		var hours = [
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,
+			0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0
+		];
+		hours[day*24 + h] = 1;
 
 		emit([Y, M, D, msg.sender], hours);
 	}

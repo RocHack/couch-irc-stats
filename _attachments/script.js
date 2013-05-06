@@ -292,7 +292,14 @@ var weeklyDistribution = (function () {
 	var first = true;
 	function gotData(error, resp) {
 		var newData = getFirstValue(resp) || [];
-		data = stack(newData);
+		// convert 1d array to 2d array
+		var deepData = [[], [], [], [], [], [], [], [], [], [], [], [],
+			[], [], [], [], [], [], [], [], [], [], [], []];
+		for (var i = 0; i < 24; i++)
+			for (var j = 0; j < 7; j++)
+				deepData[i][j] = newData[24*j + i];
+
+		data = stack(deepData);
 		window.data = data;
 		window.newData = newData;
 
