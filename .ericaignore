@@ -1,5 +1,5 @@
 [
-  "README$",
+  "README",
   ".*~$",
   "\\..*\\.swp$",
   "^_attachments/d3/[^d]",
