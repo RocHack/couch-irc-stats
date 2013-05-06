@@ -19,5 +19,5 @@ Todo
 ----
 - Integrate log viewer
 - Add per-user stats
-- Add list of top links posted
+- Add karma graph
 - Your suggestion here
