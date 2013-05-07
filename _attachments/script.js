@@ -394,11 +394,7 @@ var karmaGraph = (function () {
 		var row,
 			rows = resp.rows,
 			data = [],
-			dataByName = {},
-			startValue = {
-				date: extent[0],
-				value: 0
-			};
+			dataByName = {};
 
 		rows.forEach(function(row) {
 			var key = row.key;
@@ -419,7 +415,7 @@ var karmaGraph = (function () {
 				item = dataByName[name] = {
 					sum: sum,
 					name: name,
-					values: [startValue]
+					values: []
 				};
 				data.push(item);
 			}
@@ -442,16 +438,6 @@ var karmaGraph = (function () {
 		if (range[0] == range[1]) range = [-2, 2];
 		if (range[0] > 0) range[0] = 0;
 		y.domain(range);
-
-		var endDate = x.domain()[1];
-
-		// add end points for each path
-		data.forEach(function (item) {
-			item.values.push({
-				date: extent[1],
-				value: item.values[item.values.length-1].value
-			});
-		});
 
 		xAxis(xAxisG);
 		yAxis(yAxisG);
