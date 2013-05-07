@@ -128,6 +128,7 @@ function updateHistograms(extent) {
 	hourlyDistribution(extent);
 	weeklyDistribution(extent);
 	topURLs(extent);
+	karmaGraph(extent);
 }
 
 // Distribution histograms
@@ -342,5 +343,157 @@ var topURLs = (function () {
 	return function updateRange(extent) {
 		var query = makeRangeQuery(extent) + "&group=true";
 		d3.json(base + "_list/top_urls/urls?" + query, gotData);
+	};
+}());
+
+var karmaGraph = (function () {
+	var svg = d3.select("#karma").append("svg");
+	var extent = [];
+	var limit = 6;
+
+	var margin = {top: 40, right: 40, bottom: 20, left: 60},
+		width = 760 - margin.left - margin.right,
+		height = 140 - margin.top - margin.bottom;
+
+	var x = d3.time.scale().range([0, width]),
+		y = d3.scale.pow().range([height, 0]);
+
+	var xAxis = d3.svg.axis().scale(x).orient("bottom");
+	var yAxis = d3.svg.axis().scale(y).orient("right").ticks(4);
+
+	var chart = svg.append("g")
+		//.attr("class", "hourly")
+		.attr("transform", "translate(" +
+			margin.left + "," + margin.top + ")");
+
+	var line = d3.svg.line()
+	    .x(function date(d) { return x(d.date); })
+		.y(function value(d) { return y(d.value); });
+
+	var path = svg.append("path")
+		.attr("class", "line")
+
+	var xAxisG = chart.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + (height) + ")");
+
+	var yAxisG = chart.append("g")
+		.attr("class", "y axis")
+		.attr("transform", "translate(" + (width) + ",0)");
+
+	chart.append("text")
+		.attr("x", width/2)
+		.attr("y", -10)
+		.attr("text-anchor", "middle")
+		.attr("class", "heading")
+		.text("Karma");
+
+	var color = d3.scale.category10();
+
+	function gotData(error, resp) {
+		var row,
+			rows = resp.rows,
+			data = [],
+			dataByName = {},
+			startValue = {
+				date: extent[0],
+				value: 0
+			};
+
+		rows.forEach(function(row) {
+			var key = row.key;
+			row.date = new Date(key[0], key[1], key[2], key[3]);
+			row.name = key[4];
+		});
+
+		for (var i = 0; i < rows.length; i++) {
+			row = rows[i];
+			var date = row.date,
+				name = row.name,
+				item = dataByName[name],
+				sum = row.value;
+
+			if (item) {
+				sum = item.sum += sum;
+			} else {
+				item = dataByName[name] = {
+					sum: sum,
+					name: name,
+					values: [startValue]
+				};
+				data.push(item);
+			}
+			row.sum = sum;
+			item.values.push({
+				date: date,
+				value: sum
+			});
+		}
+
+		data.sort(function (a, b) {
+			return b.values.length - a.values.length;
+		});
+		data = data.slice(0, limit);
+
+		x.domain(extent);
+		var values = d3.merge(data.map(function(d) { return d.values; }));
+		var range = d3.extent(values, function(row) { return row.value; });
+
+		if (range[0] == range[1]) range = [-2, 2];
+		if (range[0] > 0) range[0] = 0;
+		y.domain(range);
+
+		var endDate = x.domain()[1];
+
+		// add end points for each path
+		data.forEach(function (item) {
+			item.values.push({
+				date: extent[1],
+				value: item.values[item.values.length-1].value
+			});
+		});
+
+		xAxis(xAxisG);
+		yAxis(yAxisG);
+
+		var name = chart.selectAll(".name")
+			.data(data, function(d) { return d.name; })
+		var nameEnter = name.enter().append("g")
+			.attr("class", "name");
+		var path = nameEnter
+			.append("path")
+			.attr("class", "line")
+			.style("opacity", 0)
+		name.exit()
+			.transition()
+			.style("opacity", 0)
+			.remove();
+
+		name.select("path")
+			.transition()
+			.duration(500)
+			.style("opacity", 1)
+			.attr("d", function(d) { return line(d.values); })
+			.style("stroke", function(d) { return color(d.name); });
+
+		nameEnter.append("text")
+			.style("opacity", 0)
+			.attr("x", 3)
+			.attr("dy", ".35em")
+			.datum(Object)
+			.text(function(d) { return d.name; })
+			.style("fill", function(d) { return color(d.name); })
+			.transition()
+			.duration(500)
+			.style("opacity", 1);
+		name.select("text")
+			.datum(function(d) { return d.values[d.values.length-1]; })
+			.attr("transform", function(d) { return "translate(" + x(d.date) + "," + y(d.value) + ")"; })
+	}
+
+	return function(ext) {
+		extent = ext;
+		var query = makeRangeQuery(extent) + "&group=true";
+		d3.json(base + "_view/karma?" + query, gotData);
 	};
 }());

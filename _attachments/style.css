@@ -68,6 +68,25 @@ path {
 	stroke: #000;
 }
 
+/* Karma */
+
+#karma {
+	height: 150px;
+	width: 800px;
+	margin: auto;
+}
+
+#karma svg {
+	font: 11px sans-serif;
+	width: 100%;
+}
+
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+
 /* Top URLs */
 
 #top-urls {
