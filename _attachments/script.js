@@ -57,7 +57,7 @@ var margin = {top: 10, right: 20, bottom: 20, left: 20},
 	initialSelection = dev ? 0.5 : 0.12;
 
 	var x = d3.time.scale().range([0, width]),
-	y = d3.scale.linear().range([height, 0]);
+		y = d3.scale.linear().range([height, 0]);
 
 	var xAxis = d3.svg.axis().scale(x).orient("bottom");
 
@@ -150,9 +150,9 @@ var hourlyDistribution = (function () {
 	var zeros = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var data = zeros;
 
-	var margin = {top: 20, right: 320, bottom: 20, left: 20},
+	var margin = {top: 40, right: 320, bottom: 20, left: 20},
 		width = 760 - margin.left - margin.right,
-		height = 120 - margin.top - margin.bottom,
+		height = 140 - margin.top - margin.bottom,
 		w = width / 24;
 
 	var x = d3.scale.linear().range([0, width]).domain([0, 24]),
@@ -182,9 +182,9 @@ var hourlyDistribution = (function () {
 
 	hourlyChart.append("text")
 		.attr("x", width/2)
-		.attr("y", height + 40)
+		.attr("y", -10)
 		.attr("text-anchor", "middle")
-		.attr("class", "activity-heading")
+		.attr("class", "heading")
 		.text("Hourly activity");
 
 	function gotData(error, resp) {
@@ -216,9 +216,9 @@ var weeklyDistribution = (function () {
 		[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0]
 	];
 
-	var margin = {top: 20, right: 20, bottom: 20, left: 520},
+	var margin = {top: 40, right: 20, bottom: 20, left: 520},
 		width = 760 - margin.left - margin.right,
-		height = 120 - margin.top - margin.bottom,
+		height = 140 - margin.top - margin.bottom,
 		w = width / 7;
 
 	var x = d3.scale.linear().range([0, width]).domain([0, 7]),
@@ -267,9 +267,9 @@ var weeklyDistribution = (function () {
 
 	weeklyChart.append("text")
 		.attr("x", width/2)
-		.attr("y", height + 40)
+		.attr("y", -10)
 		.attr("text-anchor", "middle")
-		.attr("class", "activity-heading")
+		.attr("class", "heading")
 		.text("Daily activity");
 
 	function stack(data) {
